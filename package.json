@@ -1,0 +1,34 @@
+{
+  "name": "moneyflow",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "cross-env NODE_ENV=test nyc --all --reporter=html mocha test/ --recursive"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/diegoventuri7/moneyFlow.git"
+  },
+  "author": "Diego Venturi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/diegoventuri7/moneyFlow/issues"
+  },
+  "homepage": "https://github.com/diegoventuri7/moneyFlow#readme",
+  "dependencies": {
+    "api-query-params": "^5.0.0",
+    "body-parser": "^1.19.0",
+    "dotenv": "^9.0.2",
+    "express": "^4.17.1",
+    "express-validator": "^6.11.1",
+    "moment": "^2.29.1",
+    "mongoose": "^5.12.9"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "nyc": "^15.1.0",
+    "standard": "^16.0.3"
+  }
+}
