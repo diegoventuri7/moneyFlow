@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "test": "cross-env NODE_ENV=test nyc --all --reporter=html mocha test/ --recursive"
+    "test": "nyc --all --reporter=html mocha test/ --recursive"
   },
   "repository": {
     "type": "git",
@@ -27,7 +27,10 @@
     "mongoose": "^5.12.9"
   },
   "devDependencies": {
-    "cross-env": "^7.0.3",
+    "chai": "^4.3.4",
+    "chai-http": "^4.3.0",
+    "mocha": "^8.4.0",
+    "mongodb-memory-server": "^6.9.6",
     "nyc": "^15.1.0",
     "standard": "^16.0.3"
   }
