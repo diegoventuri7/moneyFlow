@@ -8,9 +8,9 @@ const recurringTransactionsSchema = new mongoose.Schema({
   description: { type: String, required: true },
   amount: { type: Number, required: true },
   category: { type: String, required: true, enum: ['HOME', 'INVESTMENTS', 'DONATION', 'SERVICES', 'OTHERS'] },
-  paymentMethod: { type: String, required: true, enum: ['NUBANK', 'ITAU', 'MERCADO PAGO', 'PIC PAY', 'CASH'] },
+  method: { type: String, required: true, enum: ['NUBANK', 'ITAU', 'MERCADO PAGO', 'PIC PAY', 'CASH'] },
   eachAmount: { type: Number, required: true, min: 1 },
-  eachPeriod: { type: String, required: true, enum: ['DAY', 'WEEK', 'MONTH', 'YEAR'] }
+  eachPeriod: { type: String, required: true, enum: ['days', 'weeks', 'months', 'quarters', 'years'] }
 })
 
 recurringTransactionsSchema.index({ dueDate: 1 })

@@ -1,6 +1,7 @@
 const aqp = require('api-query-params')
+const moment = require('moment')
 const recurringTransactionsRepository = require('../repositories/recurring-transactions-repository')
-
+const transactionsRepository = require('../repositories/transactions-repository')
 module.exports = new class RecurringTransactionsService {
   async create (body) {
     try {
@@ -11,7 +12,7 @@ module.exports = new class RecurringTransactionsService {
         description: body.description,
         amount: body.amount,
         category: body.category,
-        paymentMethod: body.paymentMethod,
+        method: body.method,
         eachAmount: body.eachAmount,
         eachPeriod: body.eachPeriod
       }
@@ -36,6 +37,37 @@ module.exports = new class RecurringTransactionsService {
       return await recurringTransactionsRepository.list(filter, projection, sort, skip, limit)
     } catch (error) {
       throw new Error(error)
+    }
+  }
+
+  async createNewTransactions (startDate, endDate) {
+    const filter = {
+      nextDate: { $lte: endDate },
+      $or: [{ endDate: { $exists: false } }, { endDate: { $gt: startDate } }]
+    }
+    const recurringTransactions = await recurringTransactionsRepository.list(filter, null, { nextDate: 1 })
+
+    const newTransactions = []
+    for (let i = 0; i < recurringTransactions.length; i++) {
+      const el = recurringTransactions[i]
+
+      while (el.nextDate <= endDate) {
+        const newTransaction = {
+          type: el.type,
+          description: `${el.description} - ${moment(el.nextDate).format('MM/YY')}`,
+          amount: el.amount,
+          date: el.nextDate,
+          category: el.category,
+          method: el.method,
+          recurringTransactionId: el._id,
+          status: 'PENDING'
+        }
+        newTransactions.push(newTransaction)
+        el.nextDate = moment(el.nextDate).add(el.eachAmount, el.eachPeriod)
+      }
+
+      await transactionsRepository.insertMany(newTransactions)
+      await recurringTransactionsRepository.update(el._id, { nextDate: el.nextDate })
     }
   }
 }()

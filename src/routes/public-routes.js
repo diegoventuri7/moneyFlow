@@ -1,4 +1,5 @@
 const express = require('express')
+const dashboardController = require('../api/controllers/dashboard-controller')
 const transactionsController = require('../api/controllers/transactions-controller')
 const transactionsValidator = require('../api/validators/transactions-validator')
 const recurringTransactionsController = require('../api/controllers/recurring-transactions-controller')
@@ -11,5 +12,7 @@ router.get('/transactions', transactionsController.list)
 
 router.post('/recurring-transactions', recurringTransactionsValidator.create, recurringTransactionsController.create)
 router.get('/recurring-transactions', recurringTransactionsController.list)
+
+router.get('/resume', dashboardController.resume)
 
 module.exports = router
