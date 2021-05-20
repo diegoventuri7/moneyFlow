@@ -10,7 +10,7 @@ module.exports = new class TransactionsService {
 
       if (body.numberOfInstallments > 1) {
         const amountPerInstallment = Number((body.amount / body.numberOfInstallments).toFixed(2))
-
+        const installmentsId = uuid()
         for (let i = 0; i < body.numberOfInstallments; i++) {
           const newTransaction = {
             type: body.type,
@@ -20,7 +20,7 @@ module.exports = new class TransactionsService {
             category: body.category,
             status: body.status,
             method: body.method,
-            installmentsId: uuid(),
+            installmentsId: installmentsId,
             numberOfInstallments: body.numberOfInstallments,
             installmentsTotal: body.amount
           }
@@ -28,7 +28,7 @@ module.exports = new class TransactionsService {
         }
         const total = amountPerInstallment * body.numberOfInstallments
         if (total !== body.amount) {
-          newTransactions[0].amount += Number((body.amount - total).toFixed(2))
+          newTransactions[0].amount = Number((newTransactions[0].amount + (body.amount - total)).toFixed(2))
         }
       } else {
         const newTransaction = {
