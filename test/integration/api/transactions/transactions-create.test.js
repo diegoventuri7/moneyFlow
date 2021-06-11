@@ -9,18 +9,17 @@ const { checkTransactionDatabase } = require('./transactions-support-test.js')
 
 describe('Endpoint-transactions-create', function () {
   this.timeout(5000)
-  let app, server
 
   before(async function () {
     const database = new DatabaseMock()
-    server = new Server(database)
+    this.server = new Server(database)
 
-    await server.start()
-    app = server.getApp()
+    await this.server.start()
+    this.app = this.server.getApp()
   })
 
   after('Close server', async function () {
-    await server.stop()
+    await this.server.stop()
   })
 
   it('Happy day: Create a spot income', async function () {
@@ -34,7 +33,7 @@ describe('Endpoint-transactions-create', function () {
       method: 'ITAU'
     }
 
-    const res = await chai.request(app).post('/api/transactions').send(body)
+    const res = await chai.request(this.app).post('/api/transactions').send(body)
     expect(res).to.have.status(201)
     expect(res.body).to.be.an('array').to.have.lengthOf(1)
     await checkTransactionResponse(res.body[0], body)
@@ -51,7 +50,7 @@ describe('Endpoint-transactions-create', function () {
       method: 'MERCADO PAGO'
     }
 
-    const res = await chai.request(app).post('/api/transactions').send(body)
+    const res = await chai.request(this.app).post('/api/transactions').send(body)
     expect(res).to.have.status(201)
     expect(res.body).to.be.an('array').to.have.lengthOf(1)
     await checkTransactionResponse(res.body[0], body)
@@ -70,7 +69,7 @@ describe('Endpoint-transactions-create', function () {
       installmentsPeriod: 'months'
     }
 
-    const res = await chai.request(app).post('/api/transactions').send(body)
+    const res = await chai.request(this.app).post('/api/transactions').send(body)
     expect(res).to.have.status(201)
     expect(res.body).to.be.an('array').to.have.lengthOf(3)
     expect(Object.values(_.countBy(res.body, 'installmentsId'))[0]).to.equal(3)
@@ -92,7 +91,7 @@ describe('Endpoint-transactions-create', function () {
       installmentsPeriod: 'months'
     }
 
-    const res = await chai.request(app).post('/api/transactions').send(body)
+    const res = await chai.request(this.app).post('/api/transactions').send(body)
     expect(res).to.have.status(201)
     expect(res.body).to.be.an('array').to.have.lengthOf(5)
     expect(Object.values(_.countBy(res.body, 'installmentsId'))[0]).to.equal(5)

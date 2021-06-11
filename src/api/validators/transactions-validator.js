@@ -1,11 +1,12 @@
-// const { check } = require('express-validator')
-
+const { check } = require('express-validator')
+const enums = require('../../config/enums.js')
 const validators = module.exports
 
 validators.create = [
-  // check('ticker').notEmpty().withMessage('Campo obrigatório')
-  //   .trim()
-  //   .bail() // Stops running validations if any of the previous ones have failed
+  check('type').notEmpty().withMessage('Field is required')
+    .trim()
+    .bail() // Stops running validations if any of the previous ones have failed
+    .isIn(Object.values(enums.TRANSACTIONS.TYPE))
   //   .isUppercase()
   //   .custom(async value => {
   //     if (await tickersRepository.getCount({ ticker: value }) > 0) { return Promise.reject('Ticker já cadastrado') }
