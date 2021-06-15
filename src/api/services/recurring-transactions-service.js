@@ -6,8 +6,8 @@ module.exports = new class RecurringTransactionsService {
   async create (body) {
     try {
       const newRecurringTransaction = {
-        startDate: body.startDate,
-        nextDate: body.startDate,
+        startDate: moment(body.startDate, 'MM/DD/YYYY'),
+        nextDate: moment(body.startDate, 'MM/DD/YYYY'),
         type: body.type,
         description: body.description,
         amount: body.amount,

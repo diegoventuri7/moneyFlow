@@ -35,7 +35,7 @@ module.exports = new class TransactionsService {
           type: body.type,
           description: body.description,
           amount: body.amount,
-          date: body.date,
+          date: moment(body.date, 'MM/DD/YYYY'),
           category: body.category,
           status: body.status,
           method: body.method
@@ -51,8 +51,24 @@ module.exports = new class TransactionsService {
 
   async update (transactionId, body) {
     try {
-      const updated = {
-        status: body.status
+      const updated = {}
+      if (body.hasOwnProperty('type')) {
+        updated.type = body.type
+      }
+      if (body.hasOwnProperty('amount')) {
+        updated.amount = body.amount
+      }
+      if (body.hasOwnProperty('date')) {
+        updated.date = moment(body.date, 'MM/DD/YYYY')
+      }
+      if (body.hasOwnProperty('category')) {
+        updated.category = body.category
+      }
+      if (body.hasOwnProperty('status')) {
+        updated.status = body.status
+      }
+      if (body.hasOwnProperty('method')) {
+        updated.method = body.method
       }
       return await transactionsRepository.update(transactionId, updated)
     } catch (error) {

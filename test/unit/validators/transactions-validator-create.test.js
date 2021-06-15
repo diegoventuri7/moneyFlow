@@ -2,7 +2,7 @@
 const transactionsValidator = require('../../../src/api/validators/transactions-validator.js')
 const check = require('./checks-validators.js')
 
-describe('transactions-validator', function () {
+describe('transactions-validator-create', function () {
   it('Check Type is required', check.ifStringFieldIsRequired(transactionsValidator.create, base(), 'type'))
   it('Check Type with invalid values', check.invalidValues(transactionsValidator.create, base(), 'type', ['FOO', 'income', 'expense', 'bar']))
   it('Check Type with valid values', check.allValidValues(transactionsValidator.create, base(), 'type', ['INCOME', 'EXPENSE']))
