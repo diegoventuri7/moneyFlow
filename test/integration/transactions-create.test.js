@@ -3,8 +3,8 @@ chai.use(require('chai-http'))
 chai.use(require('chai-datetime'))
 const expect = chai.expect
 const _ = require('lodash')
-const Server = require('../../../../src/loaders/server.js')
-const DatabaseMock = require('../../../utils/database-mock.js')
+const Server = require('../../src/loaders/server.js')
+const DatabaseMock = require('../utils/database-mock.js')
 const { checkTransactionDatabase } = require('./transactions-support-test.js')
 
 describe('Endpoint-transactions-create', function () {
