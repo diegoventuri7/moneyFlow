@@ -71,7 +71,7 @@ module.exports = new class TransactionsService {
 
       return await transactionsRepository.list(filter, projection, sort, skip, limit)
     } catch (error) {
-      throw new Error(error)
+      throw error.message ? error.message : error
     }
   }
 }()

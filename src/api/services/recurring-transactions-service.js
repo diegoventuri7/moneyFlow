@@ -21,7 +21,7 @@ module.exports = new class RecurringTransactionsService {
 
       return ticker
     } catch (error) {
-      throw new Error(error)
+      throw error.message ? error.message : error
     }
   }
 
@@ -36,7 +36,7 @@ module.exports = new class RecurringTransactionsService {
 
       return await recurringTransactionsRepository.list(filter, projection, sort, skip, limit)
     } catch (error) {
-      throw new Error(error)
+      throw error.message ? error.message : error
     }
   }
 
@@ -47,9 +47,9 @@ module.exports = new class RecurringTransactionsService {
     }
     const recurringTransactions = await recurringTransactionsRepository.list(filter, null, { nextDate: 1 })
 
-    const newTransactions = []
     for (let i = 0; i < recurringTransactions.length; i++) {
       const el = recurringTransactions[i]
+      const newTransactions = []
 
       while (el.nextDate <= endDate) {
         const newTransaction = {
