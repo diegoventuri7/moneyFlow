@@ -43,9 +43,18 @@ module.exports = new class TransactionsService {
         newTransactions.push(newTransaction)
       }
 
-      const ticker = await transactionsRepository.insertMany(newTransactions)
+      return await transactionsRepository.insertMany(newTransactions)
+    } catch (error) {
+      throw error.message ? error.message : error
+    }
+  }
 
-      return ticker
+  async update (transactionId, body) {
+    try {
+      const updated = {
+        status: body.status
+      }
+      return await transactionsRepository.update(transactionId, updated)
     } catch (error) {
       throw error.message ? error.message : error
     }

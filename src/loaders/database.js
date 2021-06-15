@@ -2,12 +2,12 @@ const mongoose = require('mongoose')
 const config = require('../config/config.js')
 
 module.exports = class Database {
-  constructor() {
+  constructor () {
     this.connection = null
     this.stringConnection = config.db.STRING_CONNECTION_DB
   }
 
-  async connect() {
+  async connect () {
     this.connection = await mongoose.connect(this.stringConnection, {
       useCreateIndex: true,
       useNewUrlParser: true,
@@ -16,7 +16,7 @@ module.exports = class Database {
     })
   }
 
-  async disconnect() {
+  async disconnect () {
     await mongoose.disconnect()
   }
 }

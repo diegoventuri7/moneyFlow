@@ -12,6 +12,17 @@ exports.create = function (req, res) {
   }
 }
 
+exports.update = function (req, res) {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    res.statusCode = 422; res.json({ date: new Date(), errors: errors.array() })
+  } else {
+    transactionsService.update(req.params.id, req.body).then((ticker) => {
+      res.statusCode = 201; res.json(ticker)
+    }).catch(err => { res.statusCode = 400; res.json({ date: new Date(), errors: err }) })
+  }
+}
+
 exports.list = function (req, res) {
   transactionsService.list(req.query).then((tickers) => {
     res.json(tickers)

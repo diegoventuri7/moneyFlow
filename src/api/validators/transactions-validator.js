@@ -35,3 +35,10 @@ validators.create = [
     .trim()
     .isIn(Object.values(enums.TRANSACTIONS.EACH_PERIOD))
 ]
+
+validators.update = [
+  check('status').notEmpty().withMessage('Field is required')
+    .trim()
+    .bail() // Stops running validations if any of the previous ones have failed
+    .isIn(Object.values(enums.TRANSACTIONS.STATUS))
+]

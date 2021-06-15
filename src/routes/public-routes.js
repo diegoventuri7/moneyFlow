@@ -8,6 +8,7 @@ const recurringTransactionsValidator = require('../api/validators/recurring-tran
 const router = express.Router()
 
 router.post('/transactions', transactionsValidator.create, transactionsController.create)
+router.put('/transactions/:id', transactionsValidator.update, transactionsController.update)
 router.get('/transactions', transactionsController.list)
 
 router.post('/recurring-transactions', recurringTransactionsValidator.create, recurringTransactionsController.create)

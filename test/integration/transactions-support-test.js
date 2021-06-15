@@ -18,6 +18,11 @@ async function createGenericTransaction (app, base = {}) {
   return transaction.body
 }
 
+async function updateTransaction (app, transaciontId, updated) {
+  const transaction = await chai.request(app).put('/api/transactions/' + transaciontId).send(updated)
+  return transaction.body
+}
+
 async function checkTransactionDatabase (transaction) {
   const base = await transactionsRepository.getById(transaction._id)
   expect(base).to.be.a('object')
@@ -30,4 +35,4 @@ async function checkTransactionDatabase (transaction) {
   expect(base.method).is.equal(transaction.method)
 }
 
-module.exports = { createGenericTransaction, checkTransactionDatabase }
+module.exports = { createGenericTransaction, updateTransaction, checkTransactionDatabase }
