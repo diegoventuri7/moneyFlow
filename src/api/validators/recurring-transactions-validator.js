@@ -10,7 +10,9 @@ validators.create = [
   check('description').notEmpty().withMessage('Field is required')
     .trim(),
   check('amount')
-    .isInt({ min: 0 }),
+    .isDecimal({ decimal_digits: '0,2' })
+    .bail()
+    .isFloat({ min: 0 }),
   check('startDate')
     .isDate({ format: 'MM/DD/YYYY', strictMode: true }),
   check('category').notEmpty().withMessage('Field is required')

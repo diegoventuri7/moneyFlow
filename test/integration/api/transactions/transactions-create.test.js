@@ -27,7 +27,7 @@ describe('Endpoint-transactions-create', function () {
       type: 'INCOME',
       description: 'loan',
       amount: 26,
-      date: '05-13-2021',
+      date: '05/13/2021',
       category: 'OTHERS',
       status: 'PENDING',
       method: 'ITAU'
@@ -44,7 +44,7 @@ describe('Endpoint-transactions-create', function () {
       type: 'EXPENSE',
       description: 'Energy bill',
       amount: 199.65,
-      date: '09-25-2021',
+      date: '09/25/2021',
       category: 'HOME',
       status: 'DONE',
       method: 'MERCADO PAGO'
@@ -61,7 +61,7 @@ describe('Endpoint-transactions-create', function () {
       type: 'INCOME',
       description: 'loan 3x',
       amount: 100,
-      date: '06-18-2021',
+      date: '06/18/2021',
       category: 'SERVICES',
       status: 'PENDING',
       method: 'NUBANK',
@@ -74,8 +74,8 @@ describe('Endpoint-transactions-create', function () {
     expect(res.body).to.be.an('array').to.have.lengthOf(3)
     expect(Object.values(_.countBy(res.body, 'installmentsId'))[0]).to.equal(3)
     await checkTransactionResponse(res.body[0], { ...body, description: 'loan 3x (1/3)', amount: 33.34, installmentsTotal: body.amount })
-    await checkTransactionResponse(res.body[1], { ...body, date: '07-18-2021', description: 'loan 3x (2/3)', amount: 33.33, installmentsTotal: body.amount })
-    await checkTransactionResponse(res.body[2], { ...body, date: '08-18-2021', description: 'loan 3x (3/3)', amount: 33.33, installmentsTotal: body.amount })
+    await checkTransactionResponse(res.body[1], { ...body, date: '07/18/2021', description: 'loan 3x (2/3)', amount: 33.33, installmentsTotal: body.amount })
+    await checkTransactionResponse(res.body[2], { ...body, date: '08/18/2021', description: 'loan 3x (3/3)', amount: 33.33, installmentsTotal: body.amount })
   })
 
   it('Happy day: Create a installment expense', async function () {
@@ -83,7 +83,7 @@ describe('Endpoint-transactions-create', function () {
       type: 'EXPENSE',
       description: 'Fly Tickets',
       amount: 4444,
-      date: '11-05-2021',
+      date: '11/05/2021',
       category: 'OTHERS',
       status: 'PENDING',
       method: 'ITAU',

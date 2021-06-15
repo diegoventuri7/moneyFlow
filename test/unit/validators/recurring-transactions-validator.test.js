@@ -2,7 +2,7 @@
 const recurringTransactionsValidator = require('../../../src/api/validators/recurring-transactions-validator.js')
 const check = require('./checks-validators.js')
 
-describe.only('recurring-transactions-validator', function () {
+describe('recurring-transactions-validator', function () {
   it('Check Start Date is required', check.ifDateFieldIsRequired(recurringTransactionsValidator.create, base(), 'startDate'))
   it('Check Start Date with invalid values', check.invalidValues(recurringTransactionsValidator.create, base(), 'startDate', ['2020/55/66', '2021/01/01', '30/02/2021', '01-01-2020']))
   it('Check Start Date with valid values', check.allValidValues(recurringTransactionsValidator.create, base(), 'startDate', ['01/01/2020', '06/25/2021']))
