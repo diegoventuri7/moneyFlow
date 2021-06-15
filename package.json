@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "test": "nyc --all --reporter=html mocha test/ --recursive"
+    "test": "mocha test/ --recursive",
+    "coverage": "nyc --all --reporter=html mocha test/ --recursive"
   },
   "repository": {
     "type": "git",
@@ -33,6 +34,7 @@
     "chai-http": "^4.3.0",
     "mocha": "^8.4.0",
     "mongodb-memory-server": "^6.9.6",
+    "node-mocks-http": "^1.10.1",
     "nyc": "^15.1.0",
     "standard": "^16.0.3"
   }
