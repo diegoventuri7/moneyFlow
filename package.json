@@ -20,13 +20,16 @@
   "homepage": "https://github.com/diegoventuri7/moneyFlow#readme",
   "dependencies": {
     "api-query-params": "^5.0.0",
+    "axios": "^0.21.1",
     "body-parser": "^1.19.0",
     "dotenv": "^9.0.2",
+    "ejs": "^3.1.6",
     "express": "^4.17.1",
     "express-validator": "^6.11.1",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "mongoose": "^5.12.9",
+    "node-cron": "^3.0.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

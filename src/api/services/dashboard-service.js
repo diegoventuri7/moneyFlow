@@ -30,10 +30,15 @@ module.exports = new class DashboardService {
 
 function returnBalance (transactions) {
   const balance = {
-    totalIncome: _.sumBy(transactions, (el) => { return el.type === enums.TRANSACTIONS.TYPE.INCOME ? el.amount : 0 }),
-    totalExpense: _.sumBy(transactions, (el) => { return el.type === enums.TRANSACTIONS.TYPE.EXPENSE ? el.amount : 0 }),
-    totalPendingIncome: _.sumBy(transactions, (el) => { return el.type === enums.TRANSACTIONS.TYPE.INCOME && el.status === enums.TRANSACTIONS.STATUS.PENDING ? el.amount : 0 }),
-    totalPendingExpense: _.sumBy(transactions, (el) => { return el.type === enums.TRANSACTIONS.TYPE.EXPENSE && el.status === enums.TRANSACTIONS.STATUS.PENDING ? el.amount : 0 })
+    totalIncome: calcTotal(transactions, (el) => { return el.type === enums.TRANSACTIONS.TYPE.INCOME ? el.amount : 0 }),
+    totalExpense: calcTotal(transactions, (el) => { return el.type === enums.TRANSACTIONS.TYPE.EXPENSE ? el.amount : 0 }),
+    totalPendingIncome: calcTotal(transactions, (el) => { return el.type === enums.TRANSACTIONS.TYPE.INCOME && el.status === enums.TRANSACTIONS.STATUS.PENDING ? el.amount : 0 }),
+    totalPendingExpense: calcTotal(transactions, (el) => { return el.type === enums.TRANSACTIONS.TYPE.EXPENSE && el.status === enums.TRANSACTIONS.STATUS.PENDING ? el.amount : 0 })
   }
   return balance
+}
+
+function calcTotal (transactions, interator) {
+  const total = _.sumBy(transactions, interator)
+  return Number(total.toFixed(2))
 }

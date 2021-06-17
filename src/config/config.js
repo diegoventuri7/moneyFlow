@@ -6,6 +6,9 @@ const config = Object.freeze({
   },
   db: {
     STRING_CONNECTION_DB: process.env.STRING_CONNECTION_DB
+  },
+  slack: {
+    URL: process.env.URL_SLACK
   }
 })
 

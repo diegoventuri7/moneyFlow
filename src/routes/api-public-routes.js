@@ -9,6 +9,7 @@ const router = express.Router()
 
 router.post('/transactions', transactionsValidator.create, transactionsController.create)
 router.put('/transactions/:id', transactionsValidator.update, transactionsController.update)
+router.delete('/transactions/:id', transactionsController.delete)
 router.get('/transactions', transactionsController.list)
 
 router.post('/recurring-transactions', recurringTransactionsValidator.create, recurringTransactionsController.create)

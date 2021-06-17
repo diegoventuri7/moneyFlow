@@ -3,10 +3,11 @@ const config = require('../config/config.js')
 const expressLoader = require('./express.js')
 
 module.exports = class Server {
-  constructor (database) {
+  constructor (database, schedule) {
     this.server = null
     this.app = express()
     this.database = database
+    this.schedule = schedule
   }
 
   async start () {
@@ -22,9 +23,15 @@ module.exports = class Server {
       }
       console.log(`Server started on ${config.express.PORT} port`)
     })
+    if (this.schedule) {
+      await this.schedule.start()
+    }
   }
 
   async stop () {
+    if (this.schedule) {
+      await this.schedule.stop()
+    }
     await this.database.disconnect()
     await this.server.close()
   }

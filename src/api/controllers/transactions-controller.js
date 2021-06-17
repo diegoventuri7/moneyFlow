@@ -23,6 +23,12 @@ exports.update = function (req, res) {
   }
 }
 
+exports.delete = function (req, res) {
+  transactionsService.delete(req.params.id).then((data) => {
+    res.statusCode = 201; res.json(data)
+  }).catch(err => { res.statusCode = 400; res.json({ date: new Date(), errors: err }) })
+}
+
 exports.list = function (req, res) {
   transactionsService.list(req.query).then((tickers) => {
     res.json(tickers)

@@ -76,6 +76,14 @@ module.exports = new class TransactionsService {
     }
   }
 
+  async delete (transactionId) {
+    try {
+      return await transactionsRepository.deleteOne(transactionId)
+    } catch (error) {
+      throw error.message ? error.message : error
+    }
+  }
+
   async list (query) {
     try {
       let { filter, skip = 0, limit = 50, sort = { ticker: 1 }, projection } = aqp(query, {
