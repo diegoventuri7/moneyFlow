@@ -7,7 +7,7 @@ module.exports = new class AlertService {
   async run () {
     try {
       const filter = {
-        date: { $lt: moment().add(1, 'days') },
+        date: { $lt: moment().add(1, 'days').hour(0).minutes(0).seconds(0) },
         status: enums.TRANSACTIONS.STATUS.PENDING
       }
       const transactions = await transactionsRepository.list(filter, null, { date: 1 })

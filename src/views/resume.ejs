@@ -82,6 +82,7 @@
                   <label for="confirmDate">Date</label>
                   <div class="input-group">
                      <input class="form-control" type="date" name="confirmDate" id="confirmDate" />
+                     <i class="fa fa-refresh" id="setCurrentDate"></i>
                      <div class="invalid-tooltip" id="msgConfirmDate"></div>
                   </div>
                </div>
@@ -100,8 +101,8 @@
                      <select class="form-control" id="confirmMethod">
                         <option value="NUBANK">NUBANK</option>
                         <option value="ITAU">ITAU</option>
-                        <option value="MERCADO_PAGO">MERCADO PAGO</option>
-                        <option value="PIC_PAY">PIC PAY</option>
+                        <option value="MERCADO PAGO">MERCADO PAGO</option>
+                        <option value="PIC PAY">PIC PAY</option>
                         <option value="CASH">CASH</option>
                      </select>
                   </div>
@@ -156,7 +157,6 @@
          contentType: 'application/json',
          success: function (data) {
             $(".transactionsTable tbody").empty();
-            console.log(data)
             transactions = data.transactions
             showBalance(data.balance)
             for (let i = 0; i < data.transactions.length; i++) {
@@ -202,13 +202,11 @@
    }
 
    $(document).on("click", "#dataTables-example tbody tr", function () {
-      console.log(this.id)
       const trans = transactions.filter((el) => { return el._id === this.id })
-      console.log(trans)
-      $('#confirmDate').val(moment().format('YYYY-MM-DD'))
+      $('#confirmDate').val(moment(trans[0].date).format('YYYY-MM-DD'))
       $('#confirmAmount').val(trans[0].amount)
       $('#confirmMethod').val(trans[0].method)
-      $('#confirmStatus').val(trans[0].status === 'DONE' ? 'PENDING' : 'DONE')
+      $('#confirmStatus').val(trans[0].status)
       $('#confirmId').val(trans[0]._id)
       $("#confirmModal").modal({
          backdrop: 'static',
@@ -223,7 +221,6 @@
          type: 'DELETE',
          contentType: 'application/json',
          success: function (data) {
-            console.log('atualizado som ceuss', data)
             showTransactions()
          }
       })
@@ -241,18 +238,20 @@
          'amount': amount,
          'method': method
       }
-      console.log(id, body)
       $.ajax({
          url: `/api/transactions/${id}`,
          type: 'PUT',
          contentType: 'application/json',
          data: JSON.stringify(body),
          success: function (data) {
-            console.log('atualizado som ceuss', data)
             showTransactions()
          }
       })
    }
+
+   $("#setCurrentDate").on("click", function () {
+      $('#confirmDate').val(moment().format('YYYY-MM-DD'))
+   })
 
 
    $("#previousMonth").on("click", function () {

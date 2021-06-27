@@ -68,8 +68,8 @@
                                     <select class="form-control" id="confirmMethod">
                                        <option value="NUBANK">NUBANK</option>
                                        <option value="ITAU">ITAU</option>
-                                       <option value="MERCADO_PAGO">MERCADO PAGO</option>
-                                       <option value="PIC_PAY">PIC PAY</option>
+                                       <option value="MERCADO PAGO">MERCADO PAGO</option>
+                                       <option value="PIC PAY">PIC PAY</option>
                                        <option value="CASH">CASH</option>
                                     </select>
                                  </div>
@@ -171,8 +171,7 @@
          contentType: 'application/json',
          data: JSON.stringify(body),
          success: function (data) {
-            alert("Regra criada com sucesso!");
-            console.log(data)
+            alert("Transação criada com sucesso!");
             $('#loaderDiv').removeClass('loader');
             $("#save").show();
          },
