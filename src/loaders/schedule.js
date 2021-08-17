@@ -8,16 +8,17 @@ module.exports = class Schedule {
 
   async start () {
     console.log('Starting cronjobs...')
+
     this.tasks.push(
       cron.schedule('0 7 * * *', () => {
-        console.log('running a task as 7h')
+        console.log(new Date() + ' - Running alertService task - 0 7 * * *')
         alertService.run().catch(error => console.log(error))
       })
     )
 
     this.tasks.push(
       cron.schedule('0 14 * * *', () => {
-        console.log('running a task as 14h')
+        console.log(new Date() + ' - Running alertService task - 0 14 * * *')
         alertService.run().catch(error => console.log(error))
       })
     )

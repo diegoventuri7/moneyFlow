@@ -60,8 +60,6 @@ async function sendAlert (transaction) {
     json: true
   }
 
-  console.log('new alert send', JSON.stringify(options, null, 3))
-
   const res = await axios(options)
 
   if (res.status === 200) {

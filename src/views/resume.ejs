@@ -20,12 +20,12 @@
                      <thead>
                         <tr>
                            <th>Day</th>
-                           <th>Type</th>
+                           <th>Status</th>
                            <th>Description</th>
                            <th>Amount</th>
                            <th>Category</th>
                            <th>Method</th>
-                           <th>Status</th>
+                           <th>Type</th>
                         </tr>
                      </thead>
                      <tbody>
@@ -78,16 +78,21 @@
          <div class="modal-body">
             <div class="row">
 
+               <div class="form-group col-12 col-lg-4">
+                  <label for="confirmDescription">Description</label>
+                  <input class="form-control" type="text" name="confirmDescription" id="confirmDescription" disabled />
+                  <div class="invalid-tooltip" id="msgConfirmDescription"></div>
+               </div>
+
                <div class="form-group col-12 col-lg-3">
-                  <label for="confirmDate">Date</label>
+                  <label for="confirmDate">Date <i class="fa fa-refresh" id="setCurrentDate"></i></label>
                   <div class="input-group">
                      <input class="form-control" type="date" name="confirmDate" id="confirmDate" />
-                     <i class="fa fa-refresh" id="setCurrentDate"></i>
                      <div class="invalid-tooltip" id="msgConfirmDate"></div>
                   </div>
                </div>
 
-               <div class="form-group col-12 col-lg-3">
+               <div class="form-group col-12 col-lg-2">
                   <label for="confirmAmount">Amount</label>
                   <div class="input-group">
                      <input class="form-control" type="number" name="confirmAmount" id="confirmAmount" step="0.01" />
@@ -107,15 +112,13 @@
                      </select>
                   </div>
                </div>
+            </div>
 
+            <div class="row">
                <div class="form-group col-12 col-lg-3">
-                  <label for="confirmStatus">Status</label>
-                  <div class="input-group">
-                     <select class="form-control" id="confirmStatus">
-                        <option value="PENDING">PENDING</option>
-                        <option value="DONE">DONE</option>
-                     </select>
-                  </div>
+                  <legend for="confirmStatus">Status</legend>
+                  <input type="radio" name="confirmStatus" value="PENDING"> PENDING<br>
+                  <input type="radio" name="confirmStatus" value="DONE"> DONE<br>
                </div>
 
                <div class="form-group col-12 col-lg-4">
@@ -168,7 +171,7 @@
                let status = ''
                if (el.status === 'DONE') {
                   status = '<i class="fa fa-circle" style="color: green"></i>'
-               } else if (moment(el.date).format('DD') == moment().format('DD')) {
+               } else if (getDayFromDate(el.date) == getDayFromDate(moment().toISOString())) {
                   status = '<i class="fa fa-circle" style="color: yellow"></i>'
                } else if (moment(el.date) < moment()) {
                   status = '<i class="fa fa-circle" style="color: red"></i>'
@@ -177,15 +180,15 @@
                }
 
                html = `<tr id="${el._id}">`;
-               html += '  <td class="text-center">' + moment(el.date).format("DD") + '</td>';
+               html += '  <td class="text-center">' + getDayFromDate(el.date) + '</td>';
+               html += '  <td class="text-center">' + status + '</td>';
 
-               html += '  <td class="text-center">' + type + '</td>';
                html += '  <td class="text-center">' + el.description + '</td>';
                html += '  <td class="text-center">' + symbol + Number(el.amount) + '</td>';
 
                html += '  <td class="text-center">' + el.category + '</td>';
                html += '  <td class="text-center">' + el.method + '</td>';
-               html += '  <td class="text-center">' + status + '</td>';
+               html += '  <td class="text-center">' + type + '</td>';
 
                html += '</tr>';
 
@@ -203,10 +206,12 @@
 
    $(document).on("click", "#dataTables-example tbody tr", function () {
       const trans = transactions.filter((el) => { return el._id === this.id })
+      $('#confirmDescription').val(trans[0].description)
       $('#confirmDate').val(moment(trans[0].date).format('YYYY-MM-DD'))
       $('#confirmAmount').val(trans[0].amount)
       $('#confirmMethod').val(trans[0].method)
-      $('#confirmStatus').val(trans[0].status)
+      $('[name="confirmStatus"]').removeAttr('checked');
+      $("input[name=confirmStatus][value=" + trans[0].status + "]").prop('checked', true);
       $('#confirmId').val(trans[0]._id)
       $("#confirmModal").modal({
          backdrop: 'static',
@@ -227,12 +232,14 @@
    }
 
    function confirm() {
+      let description = $('#confirmDescription').val()
       let date = moment($('#confirmDate').val()).format('MM/DD/YYYY')
       let amount = $('#confirmAmount').val()
       let method = $('#confirmMethod').val()
       let id = $('#confirmId').val()
-      let status = $('#confirmStatus').val()
+      let status = $("input[name='confirmStatus']:checked").val()
       const body = {
+         // 'description':description,
          'status': status,
          'date': date,
          'amount': amount,
@@ -277,6 +284,11 @@
    function showDate() {
       let months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
       const date = months[currentMonth - 1] + ' / ' + currentYear
-      $("#currentDate").text(date)
+      const title = date + ' - ' + moment().format('DD/MM/YYYY')
+      $("#currentDate").text(title)
+   }
+
+   function getDayFromDate(date) {
+      return date.substr(8, 2)
    }
 </script>
