@@ -15,8 +15,8 @@
             </div>
             <div class="panel-body">
                <div class="table-responsive">
-                  <table class="table table-striped table-bordered table-hover transactionsTable"
-                     id="dataTables-example">
+                  <table id="transactions" class="display transactionsTable table-striped table-hover"
+                     style="width:100%; border-spacing:12px">
                      <thead>
                         <tr>
                            <th>Day</th>
@@ -31,6 +31,17 @@
                      <tbody>
 
                      </tbody>
+                     <tfoot>
+                        <tr>
+                           <th>Day</th>
+                           <th>Status</th>
+                           <th>Description</th>
+                           <th>Amount</th>
+                           <th>Category</th>
+                           <th>Method</th>
+                           <th>Type</th>
+                        </tr>
+                     </tfoot>
                   </table>
                </div>
                <div class="row">
@@ -85,7 +96,7 @@
                </div>
 
                <div class="form-group col-12 col-lg-3">
-                  <label for="confirmDate">Date <i class="fa fa-refresh" id="setCurrentDate"></i></label>
+                  <i class="fa fa-refresh" id="setCurrentDate"><label for="confirmDate">&nbsp;&nbsp;Date</label></i>
                   <div class="input-group">
                      <input class="form-control" type="date" name="confirmDate" id="confirmDate" />
                      <div class="invalid-tooltip" id="msgConfirmDate"></div>
@@ -140,17 +151,39 @@
 </div>
 
 <script src="https://momentjs.com/downloads/moment.js"></script>
+<script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
+
 <script type="text/javascript">
    var currentMonth = moment().format("MM")
    var currentYear = moment().format("YYYY")
    var transactions = null
+
    showTransactions()
 
-   function showBalance(balance) {
-      $("#totalIncome").html("R$ " + balance.totalIncome);
-      $("#totalPendingIncome").html("R$ " + balance.totalPendingIncome);
-      $("#totalExpense").html("R$ " + balance.totalExpense);
-      $("#totalPendingExpense").html("R$ " + balance.totalPendingExpense);
+   function showBalance() {
+      let totalIncome = 0;
+      let totalPendingIncome = 0;
+      let totalExpense = 0;
+      let totalPendingExpense = 0;
+
+      $("#transactions tbody tr").each(function () {
+         $this = $(this);
+         const trans = transactions.filter((el) => { return el._id === $this[0].id })[0]
+
+         if (trans.type === 'INCOME') {
+            totalIncome += trans.amount;
+            totalPendingIncome += trans.status === 'PENDING' ? trans.amount : 0;
+         } else {
+            totalExpense += trans.amount;
+            totalPendingExpense += trans.status === 'PENDING' ? trans.amount : 0;
+         }
+
+      });
+
+      $("#totalIncome").html("R$ " + totalIncome.toFixed(2));
+      $("#totalPendingIncome").html("R$ " + totalPendingIncome.toFixed(2));
+      $("#totalExpense").html("R$ " + totalExpense.toFixed(2));
+      $("#totalPendingExpense").html("R$ " + totalPendingExpense.toFixed(2));
    }
 
    function showTransactions() {
@@ -161,7 +194,6 @@
          success: function (data) {
             $(".transactionsTable tbody").empty();
             transactions = data.transactions
-            showBalance(data.balance)
             for (let i = 0; i < data.transactions.length; i++) {
                const el = data.transactions[i];
 
@@ -195,6 +227,37 @@
                $('.transactionsTable tbody').append(html);
             }
             showDate()
+            showBalance()
+
+            $('#transactions').DataTable({
+               initComplete: function () {
+                  this.api().columns().every(function () {
+                     var column = this;
+                     var select = $('<select><option value=""></option></select>')
+                        .appendTo($(column.footer()).empty())
+                        .on('change', function () {
+                           var val = $.fn.dataTable.util.escapeRegex(
+                              $(this).val()
+                           );
+
+                           column
+                              .search(val ? '^' + val + '$' : '', true, false)
+                              .draw();
+                        });
+
+                     column.data().unique().sort().each(function (d, j) {
+                        select.append('<option value="' + d + '">' + d + '</option>')
+                     });
+                  });
+               },
+               paging: false
+            });
+
+
+            $('#transactions').on('draw.dt', function () {
+               showBalance()
+            });
+
          },
          error: function (err) {
             if (err && err.responseJSON && err.responseJSON.errors) {
@@ -204,20 +267,6 @@
       });
    }
 
-   $(document).on("click", "#dataTables-example tbody tr", function () {
-      const trans = transactions.filter((el) => { return el._id === this.id })
-      $('#confirmDescription').val(trans[0].description)
-      $('#confirmDate').val(moment(trans[0].date).format('YYYY-MM-DD'))
-      $('#confirmAmount').val(trans[0].amount)
-      $('#confirmMethod').val(trans[0].method)
-      $('[name="confirmStatus"]').removeAttr('checked');
-      $("input[name=confirmStatus][value=" + trans[0].status + "]").prop('checked', true);
-      $('#confirmId').val(trans[0]._id)
-      $("#confirmModal").modal({
-         backdrop: 'static',
-         show: true
-      });
-   });
 
    function deleteTransaction() {
       let id = $('#confirmId').val()
@@ -291,4 +340,19 @@
    function getDayFromDate(date) {
       return date.substr(8, 2)
    }
+
+   $(document).on("click", "#transactions tbody tr", function () {
+      const trans = transactions.filter((el) => { return el._id === this.id })
+      $('#confirmDescription').val(trans[0].description)
+      $('#confirmDate').val(moment(trans[0].date).format('YYYY-MM-DD'))
+      $('#confirmAmount').val(trans[0].amount)
+      $('#confirmMethod').val(trans[0].method)
+      $('[name="confirmStatus"]').removeAttr('checked');
+      $("input[name=confirmStatus][value=" + trans[0].status + "]").prop('checked', true);
+      $('#confirmId').val(trans[0]._id)
+      $("#confirmModal").modal({
+         backdrop: 'static',
+         show: true
+      });
+   });
 </script>
