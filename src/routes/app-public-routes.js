@@ -6,5 +6,6 @@ const router = express.Router()
 router.get('/resume', appController.resume)
 router.get('/transaction', appController.transaction)
 router.get('/recurring_transaction', appController.recurringTransaction)
+router.get('/import', appController.import)
 
 module.exports = router

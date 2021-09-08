@@ -9,3 +9,7 @@ exports.transaction = function (req, res) {
 exports.recurringTransaction = function (req, res) {
   res.render('layout.ejs', { page: 'recurring_transaction' })
 }
+
+exports.import = function (req, res) {
+  res.render('layout.ejs', { page: 'import' })
+}

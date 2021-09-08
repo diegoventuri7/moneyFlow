@@ -1,0 +1,119 @@
+<div class="container-fluid">
+   <div class="row">
+      <div class="col-lg-12">
+         <h1 class="page-header">Import</h1>
+      </div>
+      <!-- /.col-lg-12 -->
+   </div>
+   <!-- /.row -->
+   <div class="row">
+      <div class="col-lg-12">
+         <div class="panel panel-default">
+            <div class="panel-heading">
+               Import
+            </div>
+            <div class="panel-body">
+               <div class="row">
+                  <form id="newImport">
+                     <div class="modal-body" id="dialogLogBody"
+                        style="font-size: smaller; width: 100%; word-wrap: break-word; display: inline-block; text-align:justify;">
+                        <fieldset class="fieldset-new">
+
+                           <div class="row">
+                              <div class="form-group col-12 col-lg-3">
+                                 <label for="user">User</label>
+                                 <div class="input-group">
+                                    <select class="form-control" id="user">
+                                       <option value="diego">Diego</option>
+                                       <option value="ana">Ana</option>
+                                    </select>
+                                 </div>
+                              </div>
+
+                              <div class="form-group col-12 col-lg-3">
+                                 <label for="exchange">Exchange</label>
+                                 <div class="input-group">
+                                    <select class="form-control" id="exchange">
+                                       <option value="rico">Rico</option>
+                                       <option value="clear">Clear</option>
+                                       <option value="avenue">Avenue</option>
+                                    </select>
+                                 </div>
+                              </div>
+
+                              <div class="form-group col-12 col-lg-3">
+                                 <label for="file">File</label>
+                                 <div class="input-group">
+                                    <input class="form-control" type="file" name="file" id="file" />
+                                    <div class="invalid-tooltip" id="msgfile"></div>
+                                 </div>
+                              </div>
+
+                              <div class="form-group col-12 col-lg-2">
+                                 <label>&nbsp;</label>
+                                 <input class="form-control btn-primary" type="button" value="Import" id="save" />
+                                 <div id="loaderDiv"> </div>
+                              </div>
+                           </div>
+
+
+                           <div class="row">
+                              <label>Result</label>
+                              <textarea name="" id="jsonResult" cols="30" rows="10" style="width: 100%;
+                     min-height: 30rem;
+                     font-family: 'Lucida Console', Monaco, monospace;
+                     font-size: 14px;
+                     line-height: 1.2;"></textarea>
+                           </div>
+                        </fieldset>
+                     </div>
+                  </form>
+               </div>
+               <!-- /.row (nested) -->
+            </div>
+            <!-- /.panel-body -->
+         </div>
+         <!-- /.panel -->
+      </div>
+      <!-- /.col-lg-12 -->
+   </div>
+   <!-- /.row -->
+
+</div>
+<script type="text/javascript">
+   // const WALLET_SERVER = 'http://localhost:3030';
+   const WALLET_SERVER = 'http://159.89.131.153:3030';
+
+   $("#save").on("click", function () {
+      var formData = new FormData();
+      formData.append('user', $('#user').val());
+      formData.append('exchange', $('#exchange').val());
+      formData.append('file', $('input[type=file]')[0].files[0]);
+
+      $('#loaderDiv').addClass('loader');
+      $("#save").hide();
+
+      $.ajax({
+         url: WALLET_SERVER + '/api/orders/import',
+         type: 'POST',
+         contentType: false,
+         processData: false,
+         data: formData,
+         success: function (data) {
+            $('#loaderDiv').removeClass('loader');
+            $("#save").show();
+            var textedJson = JSON.stringify(data, null, 3);
+            $('#jsonResult').text(textedJson);
+         },
+         error: function (err) {
+            $('#loaderDiv').removeClass('loader');
+            $("#save").show();
+            console.log(err)
+            if (err && err.responseJSON && err.responseJSON) {
+               var textedJson = JSON.stringify(err.responseJSON, null, 3);
+               $('#jsonResult').text(textedJson);
+            }
+         }
+      });
+   });
+</script>
