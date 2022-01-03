@@ -6,7 +6,7 @@ const enums = require('../../config/enums')
 module.exports = new class DashboardService {
   async resume (params) {
     try {
-      const startDate = moment(`01/${params.month}/${params.year}`, 'DD/MM/YYYY').utc()
+      const startDate = moment(`01/${params.month}/${params.year}`, 'DD/MM/YYYY').utc().hour(0)
       const endDate = startDate.clone().endOf('month')
 
       await recurringTransactionsService.createNewTransactions(startDate, endDate)
